@@ -1,0 +1,4 @@
+- name: Install common tools
+  apt:
+    name: ['git', 'wget', 'sudo', 'vim', 'htop']
+    state: latest

@@ -1,0 +1,70 @@
+- name: Setup private key for deploy
+  copy:
+    content: "{{ lookup('file', deploy_key_path) }}"
+    dest: /root/.ssh/id_rsa
+    mode: 0600
+    owner: root
+    group: root
+
+- name: Clone repo
+  git:
+    repo: "{{app.repo}}"
+    dest: "{{ app.dest }}"
+    accept_hostkey: yes
+    force: yes
+
+- name: Setup master key for deploy
+  copy:
+    content: "{{ lookup('file', master_key_path) }}"
+    dest: "{{ app.dest }}/config/master.key"
+    mode: 0600
+
+- name: Bundle Install
+  bundler:
+    deployment_mode: yes
+    executable: "/usr/local/bin/bundle"
+    gemfile: "{{ app.dest }}/Gemfile"
+    gem_path: "{{ app.dest }}/vendor/bundle"
+
+- name: Assets precompiled
+  command: "bundle exec rake assets:precompile"
+  args:
+    chdir: "{{ app.dest }}"
+  environment:
+    PATH: "/root/.nvm/versions/node/v14.4.0/bin:{{ ansible_env.PATH }}"
+
+- name: db:create
+  command: "bundle exec rake db:create"
+  args:
+    chdir: "{{ app.dest }}"
+
+- name: db:migrate
+  command: "bundle exec rake db:migrate"
+  args:
+    chdir: "{{ app.dest }}"
+
+- name: db:seed
+  command: "bundle exec rake db:seed"
+  args:
+    chdir: "{{ app.dest }}"
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /src/app/tmp
+    state: directory
+    recurse: yes
+    mode: '0777'
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /src/app/log
+    state: directory
+    recurse: yes
+    mode: '0777'
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /src/app/config
+    state: directory
+    recurse: yes
+    mode: '0755'

@@ -1,0 +1,27 @@
+#設定 Passenger 的 instance directory
+passenger_instance_registry_dir /var/run/passenger-instreg;
+
+#第一個 server 區塊
+server {
+
+    #監聽 port 80 （ http request ）
+    listen 80 default_server;
+
+    #註解1，設定 server name
+    server_name $http_host;
+
+
+    location ~ /.well-known {
+        allow all;
+        root /opt/nginx/html;
+    }
+
+    #提供靜態檔案的放置目錄
+    root /src/app/public;
+
+    #啟動 Passenger
+    passenger_enabled on;
+    passenger_app_env production;
+
+    passenger_ruby /usr/local/bin/ruby;
+}

@@ -1,0 +1,12 @@
+---
+
+- name: Start puma
+  systemd:
+    name: puma
+    state: started
+    enabled: yes
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

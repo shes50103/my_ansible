@@ -1,0 +1,31 @@
+#第一個 server 區塊
+server {
+
+    #監聽 port 80 （ http request ）
+    listen 80 default_server;
+
+    #註解1，設定 server name
+    server_name $http_host;
+
+
+    location ~ /.well-known {
+        allow all;
+        root /opt/nginx/html;
+    }
+
+    location / {
+        proxy_pass http://unix:///src/app/tmp/puma.sock;
+        proxy_set_header X-Forwarded-Host $http_host;
+    }
+
+    #提供靜態檔案的放置目錄
+    root /src/app/public;
+
+    location /packs {
+      root /src/app/public;
+    }
+
+    location /assets {
+      root /src/app/public;
+    }
+}

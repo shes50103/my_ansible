@@ -1,0 +1,36 @@
+- name: Clone repo
+  git:
+    repo: "{{app.repo}}"
+    dest: "{{ app.dest }}"
+    accept_hostkey: yes
+    force: yes
+
+- name: Bundle Install
+  bundler:
+    deployment_mode: yes
+    executable: "/usr/local/bin/bundle"
+    gemfile: "{{ app.dest }}/Gemfile"
+    gem_path: "{{ app.dest }}/vendor/bundle"
+
+- name: Assets precompiled
+  command: "bundle exec rake assets:precompile"
+  args:
+    chdir: "{{ app.dest }}"
+  environment:
+    PATH: "/root/.nvm/versions/node/v14.4.0/bin:{{ ansible_env.PATH }}"
+
+- name: db:migrate
+  command: "bundle exec rake db:migrate"
+  args:
+    chdir: "{{ app.dest }}"
+
+- name: Start puma
+  systemd:
+    name: puma
+    state: started
+    enabled: yes
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

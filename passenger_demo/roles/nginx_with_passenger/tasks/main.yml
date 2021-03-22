@@ -1,0 +1,43 @@
+- name: Install nginx dependencies
+  apt:
+    name: ["nginx", "dirmngr", "gnupg"]
+
+- name: apt-key
+  shell: "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7 | cat"
+
+- name: ca-certificates
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: passenger.list
+  shell: "sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main > /etc/apt/sources.list.d/passenger.list'"
+
+- name: Install libnginx-mod-http-passenger
+  apt:
+    name: "{{ item }}"
+    update_cache: yes #why
+  with_items:
+    - libnginx-mod-http-passenger
+
+- name: Prepare nginx.conf
+  template:
+    src: app.conf.j2
+    dest: "/etc/nginx/sites-enabled/default"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /var/run/passenger-instreg
+    state: directory
+    mode: '0755'
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted

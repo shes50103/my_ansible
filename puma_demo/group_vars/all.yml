@@ -1,0 +1,31 @@
+ruby:
+  version:
+    full: '2.7.2'
+    minor: '2.7'
+  location: /usr/local/bin/ruby
+  bundler:
+    version: '2.1.4'
+
+node:
+  version:
+    major: 14
+
+passenger:
+  version:
+    full: '6.0.4'
+  location: /opt/passenger-6.0.4
+
+nginx:
+  version:
+    full: '1.17.5'
+  location: /opt/nginx
+
+postgres:
+  version:
+    major: '11'
+    full: '11-11-2'
+
+app:
+  server_name: _
+  repo: "git@github.com:shes50103/demo.git"
+  dest: "/src/app"

@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  become: yes
+  environment:
+    RAILS_ENV: "production"
+  vars_prompt:
+    - name: "deploy_key_path"
+      prompt: "Deploy key path"
+      private: no
+      default: "~/.ssh/id_rsa"
+    - name: "master_key_path"
+      prompt: "Master key path"
+      default: "~/.ssh/master.key"
+  roles:
+    - apt_install_commons
+    - ruby
+    - postgresql
+    - node
+    - nginx_with_puma
+    - application
+    - deploy
