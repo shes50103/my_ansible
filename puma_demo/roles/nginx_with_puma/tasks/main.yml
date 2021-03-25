@@ -1,4 +1,3 @@
-
 - name: Install nginx dependencies
   apt:
     name: ["nginx", "dirmngr", "gnupg"]
@@ -10,7 +9,6 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart nginx
 
 - name: Prepare puma systemd
   template:
