@@ -1,4 +1,0 @@
----
-
-epel_repo_url: https://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch
-epel_repo_gpg_key_url: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
