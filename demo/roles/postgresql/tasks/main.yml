@@ -8,12 +8,12 @@
   apt:
     name: "{{ item }}"
   with_items:
-    - postgresql
+    - postgresql-12
     - libpq-dev
 
-- name: Edit /etc/postgresql/10/main/pg_hba.conf
+- name: Edit /etc/postgresql/12/main/pg_hba.conf
   lineinfile:
-    dest: /etc/postgresql/10/main/pg_hba.conf
+    dest: /etc/postgresql/12/main/pg_hba.conf
     owner: root
     group: root
     mode: 0644
