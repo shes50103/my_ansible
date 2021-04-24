@@ -18,6 +18,7 @@
 - name: Install libnginx-mod-http-passenger
   apt:
     name: "{{ item }}"
+    update_cache: yes #why
   with_items:
     - libnginx-mod-http-passenger
 

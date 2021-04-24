@@ -7,7 +7,8 @@ class Attacker
   end
 
   def perform
-    Net::HTTP.get_response(URI(@url))
+    # Net::HTTP.get_response(URI(@url))
+    `curl --limit-rate 256b http://127.0.0.1:3000 2>&1`
   end
 end
 
@@ -23,7 +24,7 @@ class Recoder
     @datas["duration"] = elapsed_time
     @datas["time"] = Time.now.to_i
 
-    @datas["code"] = result.code
+    # @datas["code"] = result.code
 
     p "Status: #{@datas["code"]}, Time:#{@datas["duration"]}"
   end
@@ -47,7 +48,7 @@ class People
         recoder = Recoder.new
 
         loop do
-          sleep( @sleep_time )
+          sleep( 5 )
           begin
             recoder.start do
               attacker.perform
