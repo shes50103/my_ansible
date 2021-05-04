@@ -8,6 +8,7 @@ class Attacker
 
   def perform
     # nginx work better
+    # chrome://net-internals/#sockets -> flush socker pool
     `curl --limit-rate 128b #{@url} 2>&1`
 
     # puma work better
@@ -50,6 +51,7 @@ class People
 
         loop do
           # sleep( 5 )
+          sleep([*0..100].sample * 0.1)
           begin
             recoder.start do
               attacker.perform
